@@ -22,12 +22,10 @@ export default function Home() {
     <>
       <div>
 
-        {(typeof data.cars === "undefined") ? (
+        {(data.make == null) ? (
           <p>Loading...</p>
         ) : (
-          data.cars.map((car : string, i : number) => (
-            <p key={i}>{car}</p>
-          ))
+          <p>{data.make}</p>
         )}
         
       </div>
