@@ -41,7 +41,10 @@ def gather_items():
                     if "url" in product["detail"]["colors"][0]["xmedia"][0]:
                         stripped_product["url"] = product["detail"]["colors"][0]["xmedia"][0]["url"]
                     else:
-                        stripped_product["url"] = "MISSING_URL"
+                        continue
+                    keyword = product["seo"]["keyword"]
+                    seoProductId = product["seo"]["seoProductId"]
+                    stripped_product["href"] = f'https://www.zara.com/nl/en/{keyword}-p{seoProductId}.html'
                     product_names.append(stripped_product)
                 
     return product_names

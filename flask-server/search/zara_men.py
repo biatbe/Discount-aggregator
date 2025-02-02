@@ -34,7 +34,13 @@ def gather_items():
                 stripped_product["oldPrice"] = product["oldPrice"]/100
                 stripped_product["price"] = product["price"]/100
                 stripped_product["displayDiscountPercentage"] = int(((product["oldPrice"] - product["price"]) / product["oldPrice"]) * 100)
-                stripped_product["url"] = product["detail"]["colors"][0]["xmedia"][0]["url"]
+                if "url" in product["detail"]["colors"][0]["xmedia"][0]:
+                    stripped_product["url"] = product["detail"]["colors"][0]["xmedia"][0]["url"]
+                else:
+                    continue
+                keyword = product["seo"]["keyword"]
+                seoProductId = product["seo"]["seoProductId"]
+                stripped_product["href"] = f'https://www.zara.com/nl/en/{keyword}-p{seoProductId}.html'
                 product_names.append(stripped_product)
                 
     return product_names

@@ -1,39 +1,42 @@
 'use client';
 
 import { useEffect, useState } from "react"
+import ProductLayout from "../components/product_layout";
 
+
+interface Product {
+  brand: string,
+  displayDiscountPercentage: number,
+  id: number,
+  name: string,
+  oldPrice: number,
+  price: number,
+  sectionName: string,
+  url: string,
+  href: string
+}
 
 export default function Home() {
 
-  const [results, setResults] = useState<any>([{}]);
+  const [results, setResults] = useState<Product[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/products", {
-      cache: "no-cache"
-    }).then((res) => res.json())
-    .then(data => {
-      setResults(data);
-      console.log(data);
-    });
+    fetch("http://localhost:8080/api/products")
+      .then((res) => res.json())
+        .then(data => {
+          setResults(data);
+          console.log(data);
+        });
   },[])
 
 
 
+  // Only showing the first 100 results for now.
   return (
     <>
       <div className="flex flex-wrap">
         {results != null && results.length > 0 ? (
-          results.map((result : any) => (
-            <div key={result.id}>
-              <h1>{result.brand}</h1>
-              <div>{result.name}</div>
-              <div className="line-through">{result.oldPrice}</div>
-              <div>{result.price}</div>
-              <div>{result.displayDiscountPercentage}%</div>
-              <div>
-                <img width="250" src={result.url}/></div>
-            </div>
-          ))
+          <ProductLayout products={results.slice(0, 100)} />
         ) : (
           <p>Loading...</p>
         )}

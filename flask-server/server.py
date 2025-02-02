@@ -1,6 +1,6 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
-from search.zara_women import gather_items
+from search.hm_men import gather_items
 
 app = Flask(__name__)
 CORS(app)

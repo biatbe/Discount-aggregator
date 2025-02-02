@@ -26,6 +26,7 @@ def gather_items():
                 continue
             stripped_product["displayDiscountPercentage"] = int(((prices[1]["price"] - prices[0]["price"]) / prices[1]["price"]) * 100)
             stripped_product["url"] = product["swatches"][0]["productImage"]
+            stripped_product["href"] = f'https://www2.hm.com{product["url"]}'
             product_names.append(stripped_product)
 
     return product_names
