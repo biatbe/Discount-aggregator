@@ -5,14 +5,14 @@ import { useEffect, useState } from "react"
 
 export default function Home() {
 
-  const [data, setData] = useState<any>([{}]);
+  const [results, setResults] = useState<any>([{}]);
 
   useEffect(() => {
-    fetch("/products", {
+    fetch("http://localhost:8080/api/products", {
       cache: "no-cache"
     }).then((res) => res.json())
     .then(data => {
-      setData(data);
+      setResults(data);
       console.log(data);
     });
   },[])
@@ -21,14 +21,22 @@ export default function Home() {
 
   return (
     <>
-      <div>
-        <button type="button" >Search</button>
-        {(data.make == null) ? (
-          <p>Loading...</p>
+      <div className="flex flex-wrap">
+        {results != null && results.length > 0 ? (
+          results.map((result : any) => (
+            <div key={result.id}>
+              <h1>{result.brand}</h1>
+              <div>{result.name}</div>
+              <div className="line-through">{result.oldPrice}</div>
+              <div>{result.price}</div>
+              <div>{result.displayDiscountPercentage}%</div>
+              <div>
+                <img width="250" src={result.url}/></div>
+            </div>
+          ))
         ) : (
-          <p>{data.make}</p>
+          <p>Loading...</p>
         )}
-        
       </div>
     </>
   )

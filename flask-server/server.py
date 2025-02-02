@@ -1,14 +1,14 @@
 from flask import Flask, jsonify
-from search.zara import gather_items
+from flask_cors import CORS
+from search.zara_women import gather_items
 
 app = Flask(__name__)
+CORS(app)
 
-
-@app.route('/products')
+@app.route('/api/products', methods=['GET'])
 def products():
     products = gather_items()
-    print(products)
     return jsonify(products)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=8080)
