@@ -6,19 +6,22 @@ def gather_items():
     resp = requests.get("https://www.zara.com/nl/en/categories?categoryId=0&categorySeoId=7139&ajax=true", headers=headers)
     data = resp.json()
     categories = data["categories"]
-    categoryIds = []
+    categoryIds = set()
+    categoryNames = {}
     for category in categories:
         if category["name"] == "WOMAN":
             for subcategory in category["subcategories"]:
                 if subcategory["name"] == "SALE":
                     for subsubcategory in subcategory["subcategories"]:
                         if subsubcategory["isRedirected"]:
-                            categoryIds.append(subsubcategory["redirectCategoryId"])
+                            categoryIds.add(subsubcategory["redirectCategoryId"])
+                            categoryNames[subsubcategory["redirectCategoryId"]] = subsubcategory["name"]
                         else:
-                            categoryIds.append(subsubcategory["id"])
+                            categoryIds.add(subsubcategory["id"])
+                            categoryNames[subsubcategory["id"]] = subsubcategory["name"]
     
     product_names = []
-    product_ids = []
+    product_ids = set()
     for categoryId in categoryIds:
         resp = requests.get(f'https://www.zara.com/nl/en/category/{categoryId}/products?ajax=true', headers=headers)
         data = resp.json()
@@ -31,7 +34,7 @@ def gather_items():
                     stripped_product["id"] = product["id"]
                     if product["id"] in product_ids:
                         continue
-                    product_ids.append(product["id"])
+                    product_ids.add(product["id"])
                     stripped_product["brand"] = "zara"
                     stripped_product["sectionName"] = product["sectionName"].lower()
                     stripped_product["name"] = product["name"]

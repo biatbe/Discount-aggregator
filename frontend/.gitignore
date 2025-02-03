@@ -9,6 +9,10 @@
 # testing
 /coverage
 
+# text files
+*.txt
+*.pyc
+
 # next.js
 /.next/
 /out/
