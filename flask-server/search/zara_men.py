@@ -10,7 +10,7 @@ def gather_items():
     for category in categories:
         if category["name"] == "MAN":
             for subcategory in category["subcategories"]:
-                if subcategory["name"] == "SALE":
+                if subcategory["name"] == "SALE" or subcategory["name"] == "SPECIAL PRICES":
                     for subsubcategory in subcategory["subcategories"]:
                         if subsubcategory["name"] == "VIEW ALL":
                             if subsubcategory["isRedirected"]:
