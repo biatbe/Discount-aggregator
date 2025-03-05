@@ -19,6 +19,44 @@ def getPrice(price):
             number += '.'
     return float(number)
 
+def get_promotion_link():
+    options = webdriver.ChromeOptions()
+    options.add_argument("--headless")  # Run in headless mode
+    options.add_argument("--window-size=400,1080")
+    #service = Service(CHROMEDRIVER_PATH)
+    driver = webdriver.Chrome(options=options)
+    
+    try:
+        url = "https://shop.mango.com/nl"
+        driver.get(url)
+
+        time.sleep(2)
+        # Click accept cookies if available
+        cookie_button = driver.find_element(By.ID, "cookies.button.acceptAll")
+        if cookie_button:
+            cookie_button.click()
+
+        time.sleep(1)
+        hamburger_button = driver.find_element(By.CSS_SELECTOR, "div .WrapperMenu_menu__nrL6m")
+        hamburger_button.click()
+        time.sleep(1)
+        top_div = driver.find_element(By.CSS_SELECTOR, "div .TopBar_topBar__VrJV_")
+        women = top_div.find_elements(By.CSS_SELECTOR, ".BrandEntry_brandLi__AAzaN")
+        women[0].click()
+        time.sleep(1)
+        bottom_div = driver.find_element(By.CSS_SELECTOR, "div .StructureSM_content__P2E86")
+        promotion = bottom_div.find_elements(By.CSS_SELECTOR, ".Columns_column__JWxmA li")
+        promotion[5].click()
+        time.sleep(1)
+        container = driver.find_element(By.CSS_SELECTOR, "div .InteriorMenu_open__mtTEg")
+        type_links = container.find_elements(By.CSS_SELECTOR, ".Columns_column__JWxmA li")
+        view_all = type_links[0].find_element(By.CSS_SELECTOR, "a")
+        promotion_url = view_all.get_attribute("href")
+
+        return promotion_url
+    finally:
+        driver.quit()
+
 def gather_items():
     options = webdriver.ChromeOptions()
     options.add_argument("--headless")  # Run in headless mode
@@ -27,21 +65,18 @@ def gather_items():
     driver = webdriver.Chrome(options=options)
     
     try:
-        url = "https://shop.mango.com/nl/nl/c/dames/sale--70_93ea7423"
+        url = get_promotion_link()
         driver.get(url)
         wait = WebDriverWait(driver, 2)
 
-        time.sleep(1)
+        time.sleep(2)
         # Click accept cookies if available
         cookie_button = driver.find_element(By.ID, "cookies.button.acceptAll")
         if cookie_button:
             cookie_button.click()
 
-        # Scroll until no more new content is loaded
-        last_height = driver.execute_script("return document.body.scrollHeight")
-
         # Wait for new content to load
-        time.sleep(1)
+        time.sleep(2)
 
         print("Started scrolling!")
         while True:
@@ -54,10 +89,8 @@ def gather_items():
             
             # Calculate new scroll height and compare with the last height
             new_height = driver.execute_script("return document.body.scrollHeight")
-            print(new_height, driver.execute_script("return window.scrollY"))
             if new_height - driver.execute_script("return window.scrollY") < 1500:  
                 break
-            last_height = new_height
 
         print("Finished scrolling!")
         
