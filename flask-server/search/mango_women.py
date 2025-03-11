@@ -46,7 +46,10 @@ def get_promotion_link():
         time.sleep(1)
         bottom_div = driver.find_element(By.CSS_SELECTOR, "div .StructureSM_content__P2E86")
         promotion = bottom_div.find_elements(By.CSS_SELECTOR, ".Columns_column__JWxmA li")
-        promotion[5].click()
+        for prom in promotion:
+            if prom.find_element(By.CSS_SELECTOR, "span").text.upper().startswith("PROM"):
+                prom.click()
+                break
         time.sleep(1)
         container = driver.find_element(By.CSS_SELECTOR, "div .InteriorMenu_open__mtTEg")
         type_links = container.find_elements(By.CSS_SELECTOR, ".Columns_column__JWxmA li")
@@ -63,6 +66,8 @@ def gather_items():
     options.add_argument("--window-size=1920,1080")
     #service = Service(CHROMEDRIVER_PATH)
     driver = webdriver.Chrome(options=options)
+
+    products = []
     
     try:
         url = get_promotion_link()
@@ -97,8 +102,6 @@ def gather_items():
         # Get all products
         ul_element = driver.find_element(By.CLASS_NAME, "Grid_grid__fLhp5.Grid_standard__xt7_3")
         li_elements = ul_element.find_elements(By.TAG_NAME, "li")
-
-        products = []
 
         print("Started getting products!")
         for i, li in enumerate(li_elements):
@@ -137,6 +140,5 @@ def gather_items():
     finally:
         driver.quit()
 
-    print(len(li_elements), len(products))
     return products
                 

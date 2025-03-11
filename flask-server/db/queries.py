@@ -24,6 +24,15 @@ def store_products(product):
     cur.close()
     conn.close()
 
+def clear_products():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('''TRUNCATE TABLE products RESTART IDENTITY;''')
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
 def get_all_products():
     conn = get_db_connection()
     cur = conn.cursor()

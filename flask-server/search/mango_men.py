@@ -46,7 +46,10 @@ def get_promotion_link():
         time.sleep(1)
         bottom_div = driver.find_element(By.CSS_SELECTOR, "div .StructureSM_content__P2E86")
         promotion = bottom_div.find_elements(By.CSS_SELECTOR, ".Columns_column__JWxmA li")
-        promotion[5].click()
+        for prom in promotion:
+            if prom.find_element(By.CSS_SELECTOR, "span").text.upper().startswith("PROM"):
+                prom.click()
+                break
         time.sleep(1)
         container = driver.find_element(By.CSS_SELECTOR, "div .InteriorMenu_open__mtTEg")
         type_links = container.find_elements(By.CSS_SELECTOR, ".Columns_column__JWxmA li")
