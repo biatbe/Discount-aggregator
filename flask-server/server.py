@@ -1,11 +1,16 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, Response
 from flask_cors import CORS
+import csv
+import io
+
 from search.mango_men import gather_items as gather_mango_men_items
 from search.mango_women import gather_items as gather_mango_women_items
 from search.zara_men import gather_items as gather_zara_men_items
 from search.zara_women import gather_items as gather_zara_women_items
 from search.massimo_dutti_men import gather_items as gather_massimo_dutti_men_items
 from db.queries import store_products, get_all_products, clear_products
+
+from search.email import gather_emails
 
 app = Flask(__name__)
 CORS(app)
@@ -38,6 +43,11 @@ def products_update():
 def all_products():
     products = get_all_products()
     return jsonify(products)
+
+@app.route('/api/emails', methods=['GET'])
+def get_emails_csv():
+    emails = gather_emails()  # This should return a list of email addresses
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
